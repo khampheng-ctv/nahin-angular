@@ -1,0 +1,15 @@
+.img-icon {
+    width: 30px;
+}
+.dropdown-control {
+    margin-left: calc(-100% - 3.5em);
+}
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .dropdown-menu-user {
+        margin-left: 0;
+    }
+}
