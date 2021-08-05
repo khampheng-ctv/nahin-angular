@@ -19,7 +19,8 @@ const routes: Routes = [
     path: 'login',
     pathMatch: 'full',
     component: LoginComponent
-  }
+  },
+  { path: 'admin', loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) }
 ];
 
 @NgModule({
