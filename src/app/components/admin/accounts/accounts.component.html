@@ -1,0 +1,85 @@
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>E-mail</th>
+                <th>Phone</th>
+                <th>Password</th>
+                <th class="text-center">Manage</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="accounts != []">
+            <tr *ngFor="let user of accounts">
+                <td><span class="user_id">{{user._id}}</span></td>
+                <td>{{user.username}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.tel}}</td>
+                <td>{{user.password}}</td>
+                <td class="text-nowrap">
+                    <a routerLink="/admin/accounts" [queryParams]="{viewUserID: user._id}"><button class="btn btn-info me-2"><span class="material-icons">visibility</span> View</button></a>
+                    <button class="btn btn-primary me-2"><span class="material-icons">edit</span> Edit</button>
+                    <button class="btn btn-danger"><span class="material-icons">delete</span> Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<!-- View account -->
+<div class="modal" tabindex="-1" *ngIf="viewUser == []">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa fa-user-circle"></i> Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card-user mb-3">
+            <img class="img" src="assets/man.png" alt="">
+          </div>
+          <table class="table table-light table-striped">
+            <tbody>
+              <tr>
+                <td>User ID:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Username:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>First Name:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Last Name:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Password:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>E-mail:</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Phone:</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

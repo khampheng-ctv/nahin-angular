@@ -1,0 +1,27 @@
+.user_id {
+  max-width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.modal {
+  display: block !important;
+  background: rgba(141, 153, 142, 0.5);
+}
+.modal .table td:first-child {
+  width: 0%;
+  white-space: nowrap;
+  text-align: right;
+  vertical-align: middle;
+}
+.modal .card-user .img {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #ccc;
+  padding: 1em;
+  display: block;
+}

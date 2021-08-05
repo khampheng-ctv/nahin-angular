@@ -27,7 +27,7 @@ app.post("/register", (req, res) => {
     .save()
     .then(() => res.json({ msg: "Register account success" }))
     .catch((error) => {
-      if (error) res.json({ msg: "Sorry can't register account. try again"});
+      if (error) res.json({ msg: "Sorry can't register account. try again" });
     });
 });
 
@@ -36,6 +36,15 @@ app.post("/login", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
   res.json({ username: username, password: password });
+});
+
+//find account
+app.get("/accounts", (req, res) => {
+  Users.find({}, (err, result) => {
+    if (!err) {
+      res.json({ result });
+    }
+  });
 });
 
 app.listen(port, () => {
