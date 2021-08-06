@@ -1,11 +1,18 @@
 const express = require("express");
+const app = express();
+const port = 3000;
+
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Users = require("./model/users.js");
 
-const app = express();
-const port = 3000;
+//create server
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+
+//CORS & bodyParser
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,39 +21,47 @@ mongoose.connect("mongodb://localhost:27017/nahin", {
   useUnifiedTopology: true,
 });
 
-app.get("/", (req, res) => {
-  res.send("Express");
-});
 
-//register
-
-app.post("/register", (req, res) => {
-  let payload = req.body;
-  let users = new Users(payload);
-  users
-    .save()
-    .then(() => res.json({ msg: "Register account success" }))
-    .catch((error) => {
-      if (error) res.json({ msg: "Sorry can't register account. try again" });
-    });
-});
-
-//login
-app.post("/login", (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-  res.json({ username: username, password: password });
-});
-
-//find account
-app.get("/accounts", (req, res) => {
-  Users.find({}, (err, result) => {
-    if (!err) {
-      res.json({ result });
+//get all user
+app.get('/users', (req, res, next) => {
+  Users.find((error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data);
     }
-  });
-});
+  })
+})
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+//get only user
+app.get('/user/:id', (req, res, next) => {
+  Users.findById(req.params.id, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data);
+    }
+  })
+})
+
+//add user
+app.post('/addUser', (req, res, next) => {
+  Users.create(req.body, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.sendStatus(200);
+    }
+  })
+})
+
+//delete only user
+app.delete('/deleteUserOne/:id', (req, res, next) => {
+  Users.deleteOne({_id: req.params.id}, error => {
+    if (error) {
+      return next(error);
+    } else {
+      res.sendStatus(200);
+    }
+  })
+})

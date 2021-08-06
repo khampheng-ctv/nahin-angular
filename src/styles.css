@@ -2,7 +2,8 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import 'material-icons/iconfont/material-icons.css';
+@import 'sweetalert2/dist/sweetalert2.min.css';
 
 .material-icons {
-    vertical-align: bottom;
+    vertical-align: middle;
 }

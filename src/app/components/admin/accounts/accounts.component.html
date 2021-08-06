@@ -1,85 +1,177 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Dashboard</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group me-2">
+      <a routerLink="/admin/accounts" [queryParams]="{modal: 'addUser'}"><button type="button" class="btn btn-sm btn-outline-secondary"><span class="material-icons">add_circle</span> Add user</button></a>
+      <button type="button" class="btn btn-sm btn-outline-secondary"><span class="material-icons">share</span> Export</button>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+      <span class="material-icons">folder</span>
+      This week
+    </button>
+  </div>
+</div>
+
 <div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>E-mail</th>
-                <th>Phone</th>
-                <th>Password</th>
-                <th class="text-center">Manage</th>
-            </tr>
-        </thead>
-        <tbody *ngIf="accounts != []">
-            <tr *ngFor="let user of accounts">
-                <td><span class="user_id">{{user._id}}</span></td>
-                <td>{{user.username}}</td>
-                <td>{{user.firstName}}</td>
-                <td>{{user.lastName}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.tel}}</td>
-                <td>{{user.password}}</td>
-                <td class="text-nowrap">
-                    <a routerLink="/admin/accounts" [queryParams]="{viewUserID: user._id}"><button class="btn btn-info me-2"><span class="material-icons">visibility</span> View</button></a>
-                    <button class="btn btn-primary me-2"><span class="material-icons">edit</span> Edit</button>
-                    <button class="btn btn-danger"><span class="material-icons">delete</span> Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>E-mail</th>
+        <th>Phone</th>
+        <th class="text-center">Manage</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="accounts != []">
+      <tr *ngFor="let user of accounts">
+        <td><span class="user_id">{{user._id}}</span></td>
+        <td>{{user.username}}</td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.lastName}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.tel}}</td>
+        <td class="text-nowrap">
+          <a routerLink="/admin/accounts" [queryParams]="{modal: 'viewUser', userID: user._id}"><button class="btn btn-info me-2"><span class="material-icons">visibility</span> View</button></a>
+          <a routerLink="/admin/accounts" [queryParams]="{modal: 'editUser', userID: user._id}"><button class="btn btn-primary me-2"><span class="material-icons">edit</span> Edit</button></a>
+          <a routerLink="/admin/accounts" [queryParams]="{modal: 'deleteUser', userID: user._id}"><button class="btn btn-danger"><span class="material-icons">delete</span> Delete</button></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- Modal -->
-<!-- View account -->
-<div class="modal" tabindex="-1" *ngIf="viewUser == []">
-    <div class="modal-dialog">
-      <div class="modal-content">
+<!-- add user -->
+<div class="modal" tabindex="-1" *ngIf="modalAdd">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="formAddUser" (submit)="addUser()" novalidate>
         <div class="modal-header">
-          <h5 class="modal-title"><i class="fa fa-user-circle"></i> Account</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title"><span class="material-icons">add_circle</span> Add user</h5>
+          <button type="button" class="btn-close" (click)="hideModal()"></button>
         </div>
         <div class="modal-body">
-          <div class="card-user mb-3">
-            <img class="img" src="assets/man.png" alt="">
-          </div>
-          <table class="table table-light table-striped">
+          <table class="table">
             <tbody>
               <tr>
-                <td>User ID:</td>
-                <td></td>
+                <td>Username</td>
+                <td><input type="text" class="form-control" formControlName="username" [ngClass]="{'is-invalid': frmAdd.username.errors && frmAdd.username.touched}"></td>
               </tr>
               <tr>
-                <td>Username:</td>
-                <td></td>
+                <td>First name</td>
+                <td><input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': frmAdd.firstName.errors && frmAdd.firstName.touched}"></td>
               </tr>
               <tr>
-                <td>First Name:</td>
-                <td></td>
+                <td>Last name</td>
+                <td><input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': frmAdd.lastName.errors && frmAdd.lastName.touched}"></td>
               </tr>
               <tr>
-                <td>Last Name:</td>
-                <td></td>
+                <td>Gender</td>
+                <td>
+                  <input type="radio" id="male" value="male" class="form-control-check mx-2" formControlName="gender">
+                  <label for="male">Male</label>
+                  <input type="radio" id="female" value="female" class="form-control-check mx-2" formControlName="gender">
+                  <label for="female">Female</label>
+                </td>
               </tr>
               <tr>
-                <td>Password:</td>
-                <td></td>
+                <td>E-mail</td>
+                <td><input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': frmAdd.email.errors && frmAdd.email.touched}"></td>
               </tr>
               <tr>
-                <td>E-mail:</td>
-                <td></td>
+                <td>Phone</td>
+                <td><input type="number" class="form-control" formControlName="tel" [ngClass]="{'is-invalid': frmAdd.tel.errors && frmAdd.tel.touched}"></td>
               </tr>
               <tr>
-                <td>Phone:</td>
-                <td></td>
+                <td>Password</td>
+                <td><input type="password" class="form-control" formControlName="password" [ngClass]="{'is-invalid': frmAdd.password.errors && frmAdd.password.touched}"></td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!formAddUser.valid">Add</button>
+          <button type="button" class="btn btn-secondary" (click)="hideModal()">Close</button>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- View account -->
+<div class="modal" tabindex="-1" *ngIf="viewUser[0]">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><span class="material-icons">visibility</span> Account</h5>
+        <button type="button" class="btn-close" (click)="hideModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-user mb-3">
+          <img class="img" src="assets/man.png" alt="">
+        </div>
+        <table class="table table-light table-striped">
+          <tbody>
+            <tr>
+              <td>User ID:</td>
+              <td>{{viewUser[0]._id}}</td>
+            </tr>
+            <tr>
+              <td>Username:</td>
+              <td>{{viewUser[0].username}}</td>
+            </tr>
+            <tr>
+              <td>First name:</td>
+              <td>{{viewUser[0].firstName}}</td>
+            </tr>
+            <tr>
+              <td>Last name:</td>
+              <td>{{viewUser[0].lastName}}</td>
+            </tr>
+            <tr>
+              <td>Gender:</td>
+              <td>{{viewUser[0].gender}}</td>
+            </tr>
+            <tr>
+              <td>Password:</td>
+              <td>{{viewUser[0].password}}</td>
+            </tr>
+            <tr>
+              <td>E-mail:</td>
+              <td>{{viewUser[0].email}}</td>
+            </tr>
+            <tr>
+              <td>Phone:</td>
+              <td>{{viewUser[0].tel}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideModal()">Close</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- modal delete user -->
+<div class="modal" tabindex="-1" *ngIf="deleteUser">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><span class="material-icons">warning</span> Delete account</h5>
+        <button type="button" class="btn-close" (click)="hideModal()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Do you want to delete user account?<br /> "id: {{deleteUser}}"</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="deleteUserOne(deleteUser)">Delete</button>
+        <button type="button" class="btn btn-secondary" (click)="hideModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
