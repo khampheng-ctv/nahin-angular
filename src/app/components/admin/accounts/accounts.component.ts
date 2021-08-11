@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-interface users {
-  _id: number;
+interface User {
+  _id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -19,6 +20,7 @@ interface users {
   tel: number;
   password: string;
   img: string;
+  status: string
 }
 
 @Component({
@@ -27,10 +29,12 @@ interface users {
   styleUrls: ['./accounts.component.css'],
 })
 export class AccountsComponent implements OnInit {
-  accounts: users[] = [];
+  accounts: User[] = [];
   formAddUser: FormGroup;
+  formEditUser!: FormGroup;
   modalAdd: boolean = false;
-  viewUser: users[] = [];
+  modalEdit: boolean = false;
+  viewUser: User[] = [];
   deleteUser: string = '';
 
   constructor(
@@ -39,24 +43,6 @@ export class AccountsComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    //active Route
-    this.activeRoute.queryParams.subscribe((params) => {
-      let userID = params['userID'];
-      if (params['modal'] == 'viewUser' && userID) {
-        this.http
-          .get<any>(`http://localhost:3000/user/${userID}`)
-          .subscribe((data) => {
-            this.viewUser = [data];
-          });
-      }
-      if (params['modal'] == 'addUser') {
-        this.modalAdd = true;
-      }
-      if (params['modal'] == 'deleteUser' && userID) {
-        this.deleteUser = userID;
-      }
-    });
-
     //form add user
     this.formAddUser = this.fb.group({
       firstName: ['', [Validators.required, Validators.maxLength(40)]],
@@ -88,6 +74,65 @@ export class AccountsComponent implements OnInit {
         ],
       ],
       img: '',
+      status: ['user', Validators.required]
+    });
+
+    //active Route
+    this.activeRoute.queryParams.subscribe((params) => {
+      let userID = params['userID'];
+      if (params['modal'] == 'viewUser' && userID) {
+        this.http
+          .get<any>(`http://localhost:3000/user/${userID}`)
+          .subscribe((data) => {
+            this.viewUser = [data];
+          });
+      }
+      if (params['modal'] == 'addUser') {
+        this.modalAdd = true;
+      }
+      if (params['modal'] == 'editUser' && userID) {
+        //form edit user
+        this.http
+          .get<any>(`http://localhost:3000/user/${userID}`)
+          .subscribe((user) => {
+            this.formEditUser = this.fb.group({
+              _id: user._id,
+              firstName: [user.firstName, [Validators.required, Validators.maxLength(40)]],
+              lastName: [user.lastName, [Validators.required, Validators.maxLength(40)]],
+              username: [
+                user.username,
+                [
+                  Validators.required,
+                  Validators.minLength(8),
+                  Validators.maxLength(20),
+                ],
+              ],
+              gender: [user.gender, Validators.required],
+              email: [user.email, [Validators.required, Validators.email]],
+              password: [
+                '',
+                [
+                  Validators.minLength(6),
+                  Validators.maxLength(20)
+                ],
+              ],
+              tel: [
+                user.tel,
+                [
+                  Validators.required,
+                  Validators.minLength(8),
+                  Validators.maxLength(15),
+                ],
+              ],
+              img: user.img,
+              status: user.status
+            });
+            this.modalEdit = true;
+          });
+      }
+      if (params['modal'] == 'deleteUser' && userID) {
+        this.deleteUser = userID;
+      }
     });
   }
 
@@ -100,6 +145,7 @@ export class AccountsComponent implements OnInit {
     this.viewUser = [];
     this.deleteUser = '';
     this.modalAdd = false;
+    this.modalEdit = false;
     this.router.navigate([], {
       queryParams: {
         userID: null,
@@ -109,7 +155,7 @@ export class AccountsComponent implements OnInit {
     });
   }
 
-  //shortcut
+  //controls
   get frmAdd(): { [key: string]: AbstractControl } {
     return this.formAddUser.controls;
   }
@@ -117,7 +163,7 @@ export class AccountsComponent implements OnInit {
   //add new user
   addUser() {
     this.http
-      .post<any>('http://localhost:3000/addUser', this.formAddUser.value)
+      .post<any>('http://localhost:3000/admin/addUser', this.formAddUser.value)
       .subscribe(
         () => {},
         (error) => {
@@ -132,13 +178,12 @@ export class AccountsComponent implements OnInit {
           } else {
             Swal.fire({
               icon: 'error',
-              text: "Sorry, add user error",
+              text: 'Sorry, add user error',
             });
           }
         }
       );
   }
-
 
   //get all user
   getUserAll() {
@@ -150,23 +195,76 @@ export class AccountsComponent implements OnInit {
     });
   }
 
+  //submit edit user
+  submitEditUser() {
+    this.http.put<any>('http://localhost:3000/admin/editUser', this.formEditUser.value).subscribe(() => {}, error => {
+      if (error.status == 200) {
+        Swal.fire({
+          icon: 'success',
+          text: 'Update user success'
+        })
+        this.getUserAll();
+        this.hideModal();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          text: 'Sorry, Update user error'
+        })
+      }
+    })
+  }
+
   //delete one
   deleteUserOne(id: string) {
-    this.http
-      .delete(`http://localhost:3000/deleteUserOne/${id}`).subscribe(() => {}, (error) => {
+    this.http.delete(`http://localhost:3000/deleteUserOne/${id}`).subscribe(
+      () => {},
+      (error) => {
         if (error.status == 200) {
           Swal.fire({
             icon: 'success',
-            text: 'Delete user success'
-          })
+            text: 'Delete user success',
+          });
           this.getUserAll();
         } else {
           Swal.fire({
             icon: 'error',
-            text: "Sorry, delete user error"
+            text: 'Sorry, delete user error',
+          });
+        }
+      }
+    );
+    this.hideModal();
+  }
+
+  //preview image
+  onChangeFileUpload(e: any, str: string) {
+    let file = e.target.files[0];
+    // let formData = new FormData();
+    // formData.append('img', file);
+    // this.http.put('http://localhost:3000/admin/editUser', formData).subscribe(d => {
+    //   //
+    // })
+    if (file) {
+      if (file.type != 'image/png' && file.type != 'image/jpg') {
+        Swal.fire({
+          icon: 'warning',
+          text: 'Sorry, File not support (support only file *.PNG/*.JPG)'
+        })
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (str == 'add') {
+          this.formAddUser.patchValue({
+            img: reader.result
+          })
+        } else {
+          this.formEditUser.patchValue({
+            img: reader.result
           })
         }
-      })
-    this.hideModal();
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }

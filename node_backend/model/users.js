@@ -18,6 +18,7 @@ const Users = new Schema(
     password: String,
     tel: String,
     img: String,
+    status: String
   },
   {
     collection: "users",

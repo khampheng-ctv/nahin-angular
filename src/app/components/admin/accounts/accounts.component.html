@@ -54,43 +54,60 @@
           <button type="button" class="btn-close" (click)="hideModal()"></button>
         </div>
         <div class="modal-body">
-          <table class="table">
-            <tbody>
-              <tr>
-                <td>Username</td>
-                <td><input type="text" class="form-control" formControlName="username" [ngClass]="{'is-invalid': frmAdd.username.errors && frmAdd.username.touched}"></td>
-              </tr>
-              <tr>
-                <td>First name</td>
-                <td><input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': frmAdd.firstName.errors && frmAdd.firstName.touched}"></td>
-              </tr>
-              <tr>
-                <td>Last name</td>
-                <td><input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': frmAdd.lastName.errors && frmAdd.lastName.touched}"></td>
-              </tr>
-              <tr>
-                <td>Gender</td>
-                <td>
-                  <input type="radio" id="male" value="male" class="form-control-check mx-2" formControlName="gender">
+          <div class="card-img">
+            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event, 'add')" #file_upload_add>
+            <img *ngIf="!formAddUser.value.img" src="assets/man.png" alt="" class="img">
+            <img *ngIf="formAddUser.value.img" [src]="formAddUser.value.img" alt="" class="img">
+            <div class="file-upload text-center" (click)="file_upload_add.click()">
+              <span class="material-icons" style="font-size:50px;">file_upload</span>
+              <span><strong>Upload...</strong></span>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Username:</label>
+              <input type="text" class="form-control" formControlName="username" [ngClass]="{'is-invalid': frmAdd.username.errors && frmAdd.username.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">First name:</label>
+              <input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': frmAdd.firstName.errors && frmAdd.firstName.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Last name:</label>
+              <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': frmAdd.lastName.errors && frmAdd.lastName.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Gender</label>
+              <p>
+                <input type="radio" id="male" value="male" class="form-control-check mx-2" formControlName="gender">
                   <label for="male">Male</label>
                   <input type="radio" id="female" value="female" class="form-control-check mx-2" formControlName="gender">
                   <label for="female">Female</label>
-                </td>
-              </tr>
-              <tr>
-                <td>E-mail</td>
-                <td><input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': frmAdd.email.errors && frmAdd.email.touched}"></td>
-              </tr>
-              <tr>
-                <td>Phone</td>
-                <td><input type="number" class="form-control" formControlName="tel" [ngClass]="{'is-invalid': frmAdd.tel.errors && frmAdd.tel.touched}"></td>
-              </tr>
-              <tr>
-                <td>Password</td>
-                <td><input type="password" class="form-control" formControlName="password" [ngClass]="{'is-invalid': frmAdd.password.errors && frmAdd.password.touched}"></td>
-              </tr>
-            </tbody>
-          </table>
+              </p>
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">E-mail:</label>
+              <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': frmAdd.email.errors && frmAdd.email.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Phone:</label>
+              <input type="number" class="form-control" formControlName="tel" [ngClass]="{'is-invalid': frmAdd.tel.errors && frmAdd.tel.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Password:</label>
+              <input type="password" class="form-control" formControlName="password" [ngClass]="{'is-invalid': frmAdd.password.errors && frmAdd.password.touched}">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Status:</label>
+              <p>
+                <input type="radio" id="user" value="user" class="form-control-check me-2" formControlName="status">
+                <label for="user">user</label>
+                <input type="radio" id="admin" value="admin" class="form-control-check mx-2" formControlName="status">
+                <label for="admin">admin</label>
+              </p>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" [disabled]="!formAddUser.valid">Add</button>
@@ -106,12 +123,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><span class="material-icons">visibility</span> Account</h5>
+        <h5 class="modal-title"><span class="material-icons">visibility</span> User info</h5>
         <button type="button" class="btn-close" (click)="hideModal()"></button>
       </div>
       <div class="modal-body">
-        <div class="card-user mb-3">
-          <img class="img" src="assets/man.png" alt="">
+        <div class="card-img">
+          <img *ngIf="viewUser[0].img" [src]="viewUser[0].img" alt="" class="img">
+          <img *ngIf="!viewUser[0].img" src="assets/man.png" alt="" class="img">
+          <span *ngIf="viewUser[0].status" class="status">{{viewUser[0].status}}</span>
+          <span *ngIf="!viewUser[0].status" class="status">null</span>
         </div>
         <table class="table table-light table-striped">
           <tbody>
@@ -136,10 +156,6 @@
               <td>{{viewUser[0].gender}}</td>
             </tr>
             <tr>
-              <td>Password:</td>
-              <td>{{viewUser[0].password}}</td>
-            </tr>
-            <tr>
               <td>E-mail:</td>
               <td>{{viewUser[0].email}}</td>
             </tr>
@@ -147,12 +163,94 @@
               <td>Phone:</td>
               <td>{{viewUser[0].tel}}</td>
             </tr>
+            <tr>
+              <td>Password:</td>
+              <td><span class="user_id">{{viewUser[0].password}}</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="hideModal()">Close</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit account -->
+<div class="modal" tabindex="-1" *ngIf="modalEdit">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-edit"></i> Edit user</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="hideModal()"></button>
+      </div>
+      <form [formGroup]="formEditUser" (submit)="submitEditUser()" novalidate>
+        <div class="modal-body">
+          <div class="card-img">
+            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event, 'edit')" #file_upload_edit>
+            <img *ngIf="!formEditUser.value.img" src="assets/man.png" alt="" class="img">
+            <img *ngIf="formEditUser.value.img" [src]="formEditUser.value.img" alt="" class="img">
+            <div class="file-upload text-center" (click)="file_upload_edit.click()">
+              <span class="material-icons" style="font-size:50px;">file_upload</span>
+              <span><strong>Upload...</strong></span>
+            </div>
+          </div>
+          <div class="row">
+            <input type="text" class="form-control d-none" formControlName="_id" readonly>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">Username:</label>
+              <input type="text" class="form-control" formControlName="username" [ngClass]="{'is-invalid': formEditUser.controls.username.errors}">
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">First name:</label>
+              <input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': formEditUser.controls.firstName.errors}">
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">Last name:</label>
+              <input type="text" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': formEditUser.controls.lastName.errors}">
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">Gender:</label>
+              <p>
+                <input type="radio" value="male" id="male" class="form-control-check me-2" formControlName="gender">
+                <label for="male">Male</label>
+                <input type="radio" value="female" id="female" class="form-control-check mx-2" formControlName="gender">
+                <label for="female">Female</label>
+              </p>
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">E-mail:</label>
+              <input type="email" class="form-control" formControlName="email" [ngClass]="{'is-invalid': formEditUser.controls.email.errors}">
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">Phone:</label>
+              <input type="number" class="form-control" formControlName="tel" [ngClass]="{'is-invalid': formEditUser.controls.tel.errors}">
+            </div>
+            <div class="mb-2 col-sm-6">
+              <label class="form-label">Password:</label>
+              <input type="password" class="form-control" placeholder="Null = No update" formControlName="password" [ngClass]="{'is-invalid': formEditUser.controls.password.errors}">
+              <div class="invalid-feedback" *ngIf="formEditUser.controls.password.errors">
+                <span *ngIf="formEditUser.controls.password.errors.minlength">Min length: 6 characters</span>
+                <span *ngIf="formEditUser.controls.password.errors.maxlength">Max length: 20 characters</span>
+              </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+              <label class="form-label">Status:</label>
+              <p>
+                <input type="radio" id="user" value="user" class="form-control-check me-2" formControlName="status">
+                <label for="user">user</label>
+                <input type="radio" id="admin" value="admin" class="form-control-check mx-2" formControlName="status">
+                <label for="admin">admin</label>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="formEditUser.invalid">Edit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="hideModal()">Close</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
