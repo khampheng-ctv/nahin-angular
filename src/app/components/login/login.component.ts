@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -34,9 +35,27 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.http
       .post<any>('http://localhost:3000/login', this.form.value)
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .subscribe(
+        () => {},
+        (error) => {
+          if (error.status == 200) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Login success. Please click OK',
+            });
+          } else if (error.status == 404) {
+            Swal.fire({
+              icon: 'error',
+              text: 'Username or Password incorrect. Please try again',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              text: 'Login error. Please try again',
+            });
+          }
+        }
+      );
   }
 
   ngOnInit(): void {}

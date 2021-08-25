@@ -5,7 +5,7 @@
     </div>
     <div class="text-center mb-3">Your have an account? <a routerLink="/login" class="text-decoration-none">Sign
         in</a></div>
-    <form [formGroup]="form" novalidate>
+    <form [formGroup]="form" (submit)="onSubmit()" novalidate>
       <div class="row">
         <div class="col-sm-6 mb-3">
           <input type="text" class="form-control" placeholder="First Name" formControlName="firstName" [ngClass]="{ 'is-invalid': f.firstName.errors && f.firstName.touched}" />
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="col-sm-6 mb-3">
-          <input type="number" class="form-control" placeholder="Phone Number" formControlName="tel" [ngClass]="{ 'is-invalid': f.tel.errors && f.tel.touched}" pattern="[0-9]" />
+          <input type="number" class="form-control" placeholder="Phone Number" formControlName="tel" [ngClass]="{ 'is-invalid': f.tel.errors && f.tel.touched}" />
           <div class="invalid-feedback" *ngIf="f.tel.errors">
             <span *ngIf="f.tel.errors.required">Phone number is required</span>
           </div>

@@ -5,7 +5,7 @@
     </div>
     <div class="text-center mb-3">Don't have an account? <a routerLink="/register" class="text-decoration-none">Sign
         up</a></div>
-    <form [formGroup]="form" novalidate>
+    <form [formGroup]="form" (submit)="onSubmit()" novalidate>
       <div class="input-group mb-3">
         <label for="username" class="input-group-text"><i class="fa fa-user"></i></label>
         <input type="text" id="username" class="form-control fs-5" placeholder="Username" aria-label="Username" formControlName="username" [ngClass]="{ 'is-invalid' : form.controls.username.errors && form.controls.username.touched }">

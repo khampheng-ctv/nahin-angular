@@ -23,6 +23,13 @@ getUsers(app); //get all user
 editUser(app); //edit user
 deleteUser(app); //delete user
 
+//user
+const { register, login, editAccount, deleteAccount } = require('./user');
+register(app);
+login(app);
+editAccount(app);
+deleteAccount(app);
+
 //listen
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
