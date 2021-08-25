@@ -1,16 +1,26 @@
 .container-fluid {
-  background-color: #84aebd;
+  background-color: #3eecac;
+  background-image: linear-gradient(19deg, #3eecac 0%, #ee74e1 100%);
+  padding-top: 90px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: auto;
 }
 .card-icon {
-  width: 140px;
-  height: 140px;
+  width: 150px;
+  height: 150px;
   margin: -90px auto 0;
-  border: 8px solid #84aebd;
   border-radius: 50%;
-  padding: 1em;
-  background-color: inherit;
+  padding: 8px;
+  background-color: #3eecac;
+  background-image: linear-gradient(19deg, #3eecac 0%, #ee74e1 100%);
 }
 .card-icon img {
   display: block;
   width: 100%;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 0.5em;
 }

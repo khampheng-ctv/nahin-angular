@@ -20,7 +20,7 @@ interface User {
   tel: number;
   password: string;
   img: string;
-  status: string
+  status: string;
 }
 
 @Component({
@@ -36,6 +36,7 @@ export class AccountsComponent implements OnInit {
   modalEdit: boolean = false;
   viewUser: User[] = [];
   deleteUser: string = '';
+  imageURL: string = '';
 
   constructor(
     private http: HttpClient,
@@ -74,7 +75,7 @@ export class AccountsComponent implements OnInit {
         ],
       ],
       img: '',
-      status: ['user', Validators.required]
+      status: ['user', Validators.required],
     });
 
     //active Route
@@ -82,7 +83,7 @@ export class AccountsComponent implements OnInit {
       let userID = params['userID'];
       if (params['modal'] == 'viewUser' && userID) {
         this.http
-          .get<any>(`http://localhost:3000/user/${userID}`)
+          .get<any>(`http://localhost:3000/admin/user/${userID}`)
           .subscribe((data) => {
             this.viewUser = [data];
           });
@@ -93,12 +94,18 @@ export class AccountsComponent implements OnInit {
       if (params['modal'] == 'editUser' && userID) {
         //form edit user
         this.http
-          .get<any>(`http://localhost:3000/user/${userID}`)
+          .get<any>(`http://localhost:3000/admin/user/${userID}`)
           .subscribe((user) => {
             this.formEditUser = this.fb.group({
               _id: user._id,
-              firstName: [user.firstName, [Validators.required, Validators.maxLength(40)]],
-              lastName: [user.lastName, [Validators.required, Validators.maxLength(40)]],
+              firstName: [
+                user.firstName,
+                [Validators.required, Validators.maxLength(40)],
+              ],
+              lastName: [
+                user.lastName,
+                [Validators.required, Validators.maxLength(40)],
+              ],
               username: [
                 user.username,
                 [
@@ -111,10 +118,7 @@ export class AccountsComponent implements OnInit {
               email: [user.email, [Validators.required, Validators.email]],
               password: [
                 '',
-                [
-                  Validators.minLength(6),
-                  Validators.maxLength(20)
-                ],
+                [Validators.minLength(6), Validators.maxLength(20)],
               ],
               tel: [
                 user.tel,
@@ -125,7 +129,7 @@ export class AccountsComponent implements OnInit {
                 ],
               ],
               img: user.img,
-              status: user.status
+              status: user.status,
             });
             this.modalEdit = true;
           });
@@ -137,7 +141,7 @@ export class AccountsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUserAll();
+    this.getUsers();
   }
 
   //hide modal
@@ -146,6 +150,7 @@ export class AccountsComponent implements OnInit {
     this.deleteUser = '';
     this.modalAdd = false;
     this.modalEdit = false;
+    this.imageURL = '';
     this.router.navigate([], {
       queryParams: {
         userID: null,
@@ -172,7 +177,7 @@ export class AccountsComponent implements OnInit {
               icon: 'success',
               text: 'Add user success',
             });
-            this.getUserAll();
+            this.getUsers();
             this.hideModal();
             this.formAddUser.reset();
           } else {
@@ -186,37 +191,49 @@ export class AccountsComponent implements OnInit {
   }
 
   //get all user
-  getUserAll() {
+  getUsers() {
     this.accounts = [];
-    this.http.get<any>('http://localhost:3000/users').subscribe((data) => {
-      for (let user of data) {
-        this.accounts.push(user);
-      }
-    });
+    this.http
+      .get<any>('http://localhost:3000/admin/users')
+      .subscribe((data) => {
+        for (let user of data) {
+          this.accounts.push(user);
+        }
+      });
   }
 
   //submit edit user
-  submitEditUser() {
-    this.http.put<any>('http://localhost:3000/admin/editUser', this.formEditUser.value).subscribe(() => {}, error => {
-      if (error.status == 200) {
-        Swal.fire({
-          icon: 'success',
-          text: 'Update user success'
-        })
-        this.getUserAll();
-        this.hideModal();
-      } else {
-        Swal.fire({
-          icon: 'error',
-          text: 'Sorry, Update user error'
-        })
-      }
+  submitEditUser(file: any) {
+    let formData = new FormData();
+    Object.entries(this.formEditUser.value).forEach(([key, value]: any[]) => {
+      formData.set(key, value);
     })
+    if (file[0]) {
+      formData.append('img', file[0]);
+    }
+    this.http.put<any>('http://localhost:3000/admin/editUser', formData).subscribe(
+      () => {},
+      (error) => {
+        if (error.status == 200) {
+          Swal.fire({
+            icon: 'success',
+            text: 'Update user success',
+          });
+          this.getUsers();
+          this.hideModal();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Sorry, Update user error',
+          });
+        }
+      }
+    );
   }
 
   //delete one
   deleteUserOne(id: string) {
-    this.http.delete(`http://localhost:3000/deleteUserOne/${id}`).subscribe(
+    this.http.delete(`http://localhost:3000/admin/deleteUser/${id}`).subscribe(
       () => {},
       (error) => {
         if (error.status == 200) {
@@ -224,7 +241,7 @@ export class AccountsComponent implements OnInit {
             icon: 'success',
             text: 'Delete user success',
           });
-          this.getUserAll();
+          this.getUsers();
         } else {
           Swal.fire({
             icon: 'error',
@@ -237,32 +254,28 @@ export class AccountsComponent implements OnInit {
   }
 
   //preview image
-  onChangeFileUpload(e: any, str: string) {
+  onChangeFileUpload(e: any) {
     let file = e.target.files[0];
-    // let formData = new FormData();
-    // formData.append('img', file);
-    // this.http.put('http://localhost:3000/admin/editUser', formData).subscribe(d => {
-    //   //
-    // })
     if (file) {
       if (file.type != 'image/png' && file.type != 'image/jpg') {
         Swal.fire({
           icon: 'warning',
-          text: 'Sorry, File not support (support only file *.PNG/*.JPG)'
-        })
+          text: 'Sorry, File not support (support only file *.PNG/*.JPG)',
+        });
         return;
       }
       const reader = new FileReader();
       reader.onload = () => {
-        if (str == 'add') {
-          this.formAddUser.patchValue({
-            img: reader.result
-          })
-        } else {
-          this.formEditUser.patchValue({
-            img: reader.result
-          })
-        }
+        this.imageURL = String(reader.result);
+        // if (str == 'add') {
+        //   this.formAddUser.patchValue({
+        //     img: reader.result,
+        //   });
+        // } else {
+        //   this.formEditUser.patchValue({
+        //     img: reader.result,
+        //   });
+        // }
       };
       reader.readAsDataURL(file);
     }

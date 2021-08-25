@@ -16,42 +16,29 @@ export class RegisterComponent implements OnInit {
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.form = fb.group(
-      {
-        firstName: ['', [Validators.required, Validators.maxLength(40)]],
-        lastName: ['', [Validators.required, Validators.maxLength(40)]],
-        username: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.maxLength(20),
-          ],
+    this.form = this.fb.group({
+      firstName: ['', [Validators.required, Validators.maxLength(40)]],
+      lastName: ['', [Validators.required, Validators.maxLength(40)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
         ],
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(20),
-          ],
-        ],
-        confirmPassword: ['', [Validators.required]],
-        tel: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.maxLength(15),
-          ],
-        ],
-        remember: [false],
-      },
-      {
-        validator: this.MustMatch('password', 'confirmPassword'),
-      }
-    );
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(6), Validators.maxLength(20)],
+      ],
+      confirmPassword: ['', [Validators.required]],
+      tel: ['', Validators.required],
+      gender: ['', Validators.required],
+      remember: [false],
+    }, {
+      validator: this.MustMatch('password', 'confirmPassword')
+    });
   }
 
   get f(): { [kery: string]: AbstractControl } {
@@ -64,11 +51,9 @@ export class RegisterComponent implements OnInit {
       const matchingControl = formGroup.controls[matchingControlName];
 
       if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-        // return if another validator has already found an error on the matchingControl
         return;
       }
-
-      // set error on matchingControl if validation fails
+      
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true });
       } else {
@@ -77,11 +62,20 @@ export class RegisterComponent implements OnInit {
     };
   }
 
+  showPassword(e: any, pass: any) {
+    if (e.target.checked) {
+      pass.type = 'text';
+    } else {
+      pass.type = 'password';
+    }
+  }
 
   onSubmit() {
-    this.http.post<any>('http://localhost:3000/register', this.form.value).subscribe(data => {
-      console.log(data.msg);
-    })
+    this.http
+      .post<any>('http://localhost:3000/register', this.form.value)
+      .subscribe((data) => {
+        console.log(data.msg);
+      });
   }
 
   ngOnInit(): void {}

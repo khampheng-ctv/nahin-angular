@@ -55,9 +55,9 @@
         </div>
         <div class="modal-body">
           <div class="card-img">
-            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event, 'add')" #file_upload_add>
-            <img *ngIf="!formAddUser.value.img" src="assets/man.png" alt="" class="img">
-            <img *ngIf="formAddUser.value.img" [src]="formAddUser.value.img" alt="" class="img">
+            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event)" #file_upload_add>
+            <img *ngIf="imageURL == ''" src="assets/man.png" alt="" class="img">
+            <img *ngIf="imageURL" [src]="imageURL" alt="" class="img">
             <div class="file-upload text-center" (click)="file_upload_add.click()">
               <span class="material-icons" style="font-size:50px;">file_upload</span>
               <span><strong>Upload...</strong></span>
@@ -128,7 +128,7 @@
       </div>
       <div class="modal-body">
         <div class="card-img">
-          <img *ngIf="viewUser[0].img" [src]="viewUser[0].img" alt="" class="img">
+          <img *ngIf="viewUser[0].img" [src]="'http://localhost:3000/images/profile/' + viewUser[0].img" alt="" class="img">
           <img *ngIf="!viewUser[0].img" src="assets/man.png" alt="" class="img">
           <span *ngIf="viewUser[0].status" class="status">{{viewUser[0].status}}</span>
           <span *ngIf="!viewUser[0].status" class="status">null</span>
@@ -163,10 +163,6 @@
               <td>Phone:</td>
               <td>{{viewUser[0].tel}}</td>
             </tr>
-            <tr>
-              <td>Password:</td>
-              <td><span class="user_id">{{viewUser[0].password}}</span></td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -185,12 +181,13 @@
         <h5 class="modal-title"><i class="fa fa-edit"></i> Edit user</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="hideModal()"></button>
       </div>
-      <form [formGroup]="formEditUser" (submit)="submitEditUser()" novalidate>
+      <form [formGroup]="formEditUser" (submit)="submitEditUser(file_upload_edit.files)" novalidate>
         <div class="modal-body">
           <div class="card-img">
-            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event, 'edit')" #file_upload_edit>
+            <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event)" #file_upload_edit>
             <img *ngIf="!formEditUser.value.img" src="assets/man.png" alt="" class="img">
-            <img *ngIf="formEditUser.value.img" [src]="formEditUser.value.img" alt="" class="img">
+            <img *ngIf="formEditUser.value.img && imageURL == ''" [src]="formEditUser.value.img" alt="" class="img">
+            <img *ngIf="imageURL" [src]="imageURL" alt="" class="img">
             <div class="file-upload text-center" (click)="file_upload_edit.click()">
               <span class="material-icons" style="font-size:50px;">file_upload</span>
               <span><strong>Upload...</strong></span>

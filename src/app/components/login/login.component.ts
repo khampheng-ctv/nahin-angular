@@ -11,15 +11,32 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(20),
+        ],
+      ],
+      remember: false,
     });
   }
 
   onSubmit() {
-    this.http.post<any>('http://localhost:3000/login', this.form.value).subscribe(data => {
-      console.log(data);
-    })
+    this.http
+      .post<any>('http://localhost:3000/login', this.form.value)
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
 
   ngOnInit(): void {}
