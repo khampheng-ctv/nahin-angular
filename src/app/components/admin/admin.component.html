@@ -3,6 +3,7 @@
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    <button class="btn text-secondary" (click)="sidebarToggle()"><span class="material-icons">{{materialMenu}}</span></button>
     <input class="form-control form-control-dark w-100 d-none d-md-block" type="search" placeholder="Search" aria-label="Search">
     <div class="navbar-nav d-none d-md-block">
         <div class="nav-item text-nowrap">
@@ -19,31 +20,31 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" routerLink="dashboard" routerLinkActive="active">
                             <span class="material-icons">dashboard</span>
-                            Dashboard
+                            <span class="txt">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLink="accounts" routerLinkActive="active">
                             <span class="material-icons">people</span>
-                            Accounts
+                            <span class="txt">Accounts</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">report</span>
-                            Reports
+                            <span class="txt">Reports</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">layers</span>
-                            Integrations
+                            <span class="txt">Integrations</span>
                         </a>
                     </li>
                 </ul>
 
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Saved reports</span>
+                    <span class="txt">Saved reports</span>
                     <a class="link-secondary" href="#" aria-label="Add a new report">
                         <span class="material-icons">add_circle</span>
                     </a>
@@ -52,25 +53,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">folder</span>
-                            Current month
+                            <span class="txt">Current month</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">folder</span>
-                            Last quarter
+                            <span class="txt">Last quarter</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">folder</span>
-                            Social engagement
+                            <span class="txt">Social engagement</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <span class="material-icons">folder</span>
-                            Year-end sale
+                            <span class="txt">Year-end sale</span>
                         </a>
                     </li>
                 </ul>

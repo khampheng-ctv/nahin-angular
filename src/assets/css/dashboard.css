@@ -31,6 +31,22 @@ body {
   /**/
 }
 
+@media (min-width: 767.98px) {
+  /* .sidebar {
+    width: 60px;
+    overflow-y: hidden;
+  }
+  .sidebar .txt {
+    display: none;
+  }
+  .sidebar:hover {
+    width: 200px;
+  }
+  .sidebar:hover .txt {
+    display: inline;
+  } */
+}
+
 .sidebar-sticky {
   position: relative;
   top: 0;
@@ -62,6 +78,9 @@ body {
 .sidebar-heading {
   font-size: .75rem;
   text-transform: uppercase;
+}
+.sidebar .material-icons {
+  margin-right: .3em;
 }
 
 /*
