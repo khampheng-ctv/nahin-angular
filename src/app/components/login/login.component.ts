@@ -43,15 +43,10 @@ export class LoginComponent implements OnInit {
               icon: 'success',
               text: 'Login success. Please click OK',
             });
-          } else if (error.status == 404) {
-            Swal.fire({
-              icon: 'error',
-              text: 'Username or Password incorrect. Please try again',
-            });
           } else {
             Swal.fire({
               icon: 'error',
-              text: 'Login error. Please try again',
+              text: 'Username or password is incorrect. Please try again',
             });
           }
         }

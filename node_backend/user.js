@@ -41,21 +41,26 @@ const register = (app) => {
 
 //login
 const login = (app) => {
-  app.post("/login", (req, res) => {
+  app.post("/login", async (req, res) => {
     const { username, password } = req.body;
-    UserModel.findOne({ username: username }, (error, data) => {
-      if (data) {
-        bcrypt.compare(password, data.password).then((result) => {
-          if (result) {
-            res.sendStatus(200);
-          } else {
-            res.sendStatus(401);
-          }
-        });
+    const findUsername = await UserModel.findOne({ username: username });
+    const findEmail = await UserModel.findOne({ email: username });
+    if (!findUsername && !findEmail) {
+      res.sendStatus(401);
+    } else if (findUsername) {
+      comparePassword(password, findUsername.password);
+    } else if (findEmail) {
+      comparePassword(password, findEmail.password);
+    }
+
+    async function comparePassword(passwordTxt, hashPassword) {
+      const result = await bcrypt.compare(passwordTxt, hashPassword);
+      if (result) {
+        res.sendStatus(200);
       } else {
-          res.sendStatus(404);
+        res.sendStatus(401);
       }
-    });
+    }
   });
 };
 
