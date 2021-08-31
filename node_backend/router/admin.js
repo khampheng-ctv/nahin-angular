@@ -1,7 +1,7 @@
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const UserModel = require("./model/UserModel");
-const multerUpload = require("./multerUpload");
+const {singleUpload} = require("./../middleware/upload");
 
 //add new user
 const addUser = (app) => {
@@ -69,7 +69,7 @@ const getUser = (app) => {
 const editUser = (app) => {
   app.put(
     "/admin/editUser",
-    multerUpload.singleUpload("images/profile/", "img"),
+    singleUpload("images/profile/", "img"),
     async (req, res, next) => {
       let {
         _id,

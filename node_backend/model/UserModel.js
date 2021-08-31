@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { connect } = require('./../connect');
-connect();
+const database = require('./../db/database');
+database(); //connect db
 
 const UserSchema = new Schema(
   {

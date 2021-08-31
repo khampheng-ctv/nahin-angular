@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 //admin
-const { addUser, getUser, getUsers, editUser, deleteUser } = require("./admin");
+const { addUser, getUser, getUsers, editUser, deleteUser } = require("./router/admin");
 addUser(app); //add new user
 getUser(app); //get user by id
 getUsers(app); //get all user
@@ -24,7 +24,7 @@ editUser(app); //edit user
 deleteUser(app); //delete user
 
 //user
-const { register, login, editAccount, deleteAccount } = require('./user');
+const { register, login, editAccount, deleteAccount } = require('./router/user');
 register(app);
 login(app);
 editAccount(app);
