@@ -1,16 +1,5 @@
 const bcrypt = require("bcrypt");
-const multer = require("multer");
 const UserModel = require("./model/UserModel");
-const path = require("path");
-const { v4: uuidv4 } = require("uuid");
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: path.join(__dirname, "images/profile/"),
-    filename: (req, file, cb) => {
-      cb(null, uuidv4() + path.extname(file.filename));
-    },
-  }),
-});
 
 //register
 const register = (app) => {
