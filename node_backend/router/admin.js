@@ -1,6 +1,6 @@
 const fs = require("fs");
 const bcrypt = require("bcrypt");
-const UserModel = require("./model/UserModel");
+const UserModel = require("./../model/UserModel");
 const {singleUpload} = require("./../middleware/upload");
 
 //add new user

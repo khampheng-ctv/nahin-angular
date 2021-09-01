@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const database = () => {
-  mongoose.connect("mongodb://localhost:27017/nahin", {
+  mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
