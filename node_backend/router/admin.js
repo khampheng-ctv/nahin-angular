@@ -2,6 +2,14 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const UserModel = require("./../model/UserModel");
 const {singleUpload} = require("./../middleware/upload");
+const auth = require('./../middleware/auth');
+
+//admin page
+const adminPage = (app) => {
+  app.post('/admin', auth, (req, res) => {
+    res.status(200);
+  })
+}
 
 //add new user
 const addUser = (app) => {
@@ -116,6 +124,7 @@ const deleteUser = (app) => {
 };
 
 module.exports = {
+  adminPage,
   addUser,
   getUser,
   getUsers,

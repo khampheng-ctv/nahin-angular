@@ -36,7 +36,11 @@ export class LoginComponent implements OnInit {
     this.http
       .post<any>('http://localhost:3000/login', this.form.value)
       .subscribe(
-        () => {},
+        (result) => {
+          if (result) {
+            console.log(result);
+          }
+        },
         (error) => {
           if (error.status == 200) {
             Swal.fire({
@@ -46,7 +50,7 @@ export class LoginComponent implements OnInit {
           } else {
             Swal.fire({
               icon: 'error',
-              text: 'Username or password is incorrect. Please try again',
+              text: 'Username Or Password is incorrect. Please try again',
             });
           }
         }

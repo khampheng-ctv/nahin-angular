@@ -1,30 +1,44 @@
 const bcrypt = require("bcrypt");
 const UserModel = require("./../model/UserModel");
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "./../config/.env" });
 
 //register
 const register = (app) => {
   app.post("/register", async (req, res) => {
-    const { username, firstName, lastName, gender, email, tel, password } =
-      req.body;
-    const hashPassword = await bcrypt.hashSync(password, 5);
-    const data = {
-      username,
-      firstName,
-      lastName,
-      gender,
-      email,
-      tel,
-      password: hashPassword,
-      status: "user",
-    };
+    try {
+      const { username, firstName, lastName, gender, email, tel, password } =
+        req.body;
+      const hashPassword = await bcrypt.hashSync(password, 5);
 
-    UserModel.create(data, (error, data) => {
-      if (error) {
-        res.sendStatus(400);
-      } else {
-        res.sendStatus(201);
-      }
-    });
+      //create user
+      const user = await UserModel.create({
+        username,
+        firstName,
+        lastName: lastName.toUpperCase(),
+        gender,
+        email: email.toLowerCase(),
+        tel,
+        password: hashPassword,
+        status: "user",
+      });
+
+      //create token
+      const token = await jwt.sign(
+        { user_id: user._id, email },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "2h",
+        }
+      );
+
+      //return new user
+      res.status(201).json({ token: token });
+    } catch (error) {
+      res
+        .status(401)
+        .json({ error: "Can't register account. Please try again" });
+    }
   });
 };
 
@@ -35,19 +49,27 @@ const login = (app) => {
     const findUsername = await UserModel.findOne({ username: username });
     const findEmail = await UserModel.findOne({ email: username });
     if (!findUsername && !findEmail) {
-      res.sendStatus(401);
+      res.status(401).send("E-mail Or Username is incorrect");
     } else if (findUsername) {
-      comparePassword(password, findUsername.password);
+      comparePassword(password, findUsername);
     } else if (findEmail) {
-      comparePassword(password, findEmail.password);
+      comparePassword(password, findEmail);
     }
 
-    async function comparePassword(passwordTxt, hashPassword) {
-      const result = await bcrypt.compare(passwordTxt, hashPassword);
+    async function comparePassword(txt, user) {
+      const result = await bcrypt.compare(txt, user.password);
       if (result) {
-        res.sendStatus(200);
+        //create token
+        const token = jwt.sign(
+          { user_id: user._id, email: user.email },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2h",
+          }
+        );
+        res.status(200).json({token: token});
       } else {
-        res.sendStatus(401);
+        res.status(401).send("Password is incorrect");
       }
     }
   });
