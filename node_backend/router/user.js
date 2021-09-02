@@ -25,7 +25,13 @@ const register = (app) => {
 
       //create token
       const token = jwt.sign(
-        { user_id: user._id, email },
+        {
+          user_id: user._id,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
         process.env.TOKEN_KEY,
         {
           expiresIn: "2h",
@@ -33,7 +39,7 @@ const register = (app) => {
       );
 
       //return new user
-      res.status(201).json({ user: user, token: token });
+      res.status(201).json({ token: token });
     } catch (error) {
       res
         .status(401)
@@ -61,13 +67,19 @@ const login = (app) => {
       if (result) {
         //create token
         const token = jwt.sign(
-          { user_id: user._id, email: user.email },
+          {
+            user_id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          },
           process.env.TOKEN_KEY,
           {
             expiresIn: "2h",
           }
         );
-        res.status(200).json({ user: user, token: token });
+        res.status(200).json({ token: token });
       } else {
         res.status(401).send("Password is incorrect");
       }
