@@ -24,7 +24,7 @@ const register = (app) => {
       });
 
       //create token
-      const token = await jwt.sign(
+      const token = jwt.sign(
         { user_id: user._id, email },
         process.env.TOKEN_KEY,
         {
@@ -33,7 +33,7 @@ const register = (app) => {
       );
 
       //return new user
-      res.status(201).json({ token: token });
+      res.status(201).json({ user: user, token: token });
     } catch (error) {
       res
         .status(401)
@@ -67,7 +67,7 @@ const login = (app) => {
             expiresIn: "2h",
           }
         );
-        res.status(200).json({token: token});
+        res.status(200).json({ user: user, token: token });
       } else {
         res.status(401).send("Password is incorrect");
       }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,7 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.form = this.fb.group({
       username: [
         '',
@@ -37,22 +38,20 @@ export class LoginComponent implements OnInit {
       .post<any>('http://localhost:3000/login', this.form.value)
       .subscribe(
         (result) => {
-          if (result) {
-            console.log(result);
-          }
+          Swal.fire({
+            icon: 'success',
+            text: 'Login success. Please click OK',
+          });
+          localStorage.setItem('token', result.token);
+
+          //redirect
+          this.router.navigate(['/']);
         },
         (error) => {
-          if (error.status == 200) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Login success. Please click OK',
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              text: 'Username Or Password is incorrect. Please try again',
-            });
-          }
+          Swal.fire({
+            icon: 'error',
+            text: 'Username Or Password is incorrect. Please try again',
+          });
         }
       );
   }
