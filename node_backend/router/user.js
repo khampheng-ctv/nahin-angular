@@ -34,7 +34,7 @@ const register = (app) => {
         },
         process.env.TOKEN_KEY,
         {
-          expiresIn: "2h",
+          expiresIn: "7d",
         }
       );
 
@@ -76,7 +76,7 @@ const login = (app) => {
           },
           process.env.TOKEN_KEY,
           {
-            expiresIn: "2h",
+            expiresIn: "7d",
           }
         );
         res.status(200).json({ token: token });
