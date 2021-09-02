@@ -7,7 +7,7 @@
     <input class="form-control form-control-dark w-100 d-none d-md-block" type="search" placeholder="Search" aria-label="Search">
     <div class="navbar-nav d-none d-md-block">
         <div class="nav-item text-nowrap">
-            <a class="nav-link px-3" href="#"><span class="material-icons">logout</span> Sign out</a>
+            <a class="nav-link px-3" href="javascript:void(0)" (click)="logout()"><span class="material-icons">logout</span> Sign out</a>
         </div>
     </div>
 </header>
@@ -16,6 +16,9 @@
     <div class="row">
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
+                <div *ngIf="name">
+                    <span>{{name}}</span>
+                </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" routerLink="dashboard" routerLinkActive="active">

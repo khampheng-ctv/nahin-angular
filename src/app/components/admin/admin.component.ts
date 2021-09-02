@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent implements OnInit {
+  name: string = '';
   materialMenu: string = 'menu';
   sidebar: boolean = false;
 
@@ -15,9 +16,11 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage && localStorage.getItem('token')) {
-      let token = localStorage.getItem('token');
+      let token = { token: localStorage.getItem('token') };
       this.http.post('http://localhost:3000/admin', token).subscribe(
-        (result) => {},
+        (result: any) => {
+          this.name = result.firstName;
+        },
         (error) => {
           this.router.navigate(['/login']);
         }
@@ -34,5 +37,11 @@ export class AdminComponent implements OnInit {
     } else {
       this.materialMenu = 'menu';
     }
+  }
+
+  //logout
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }

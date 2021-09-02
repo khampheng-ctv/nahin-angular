@@ -168,24 +168,22 @@ export class AccountsComponent implements OnInit {
   //add new user
   addUser() {
     this.http
-      .post<any>('http://localhost:3000/admin/addUser', this.formAddUser.value)
+      .post<any>('http://localhost:3000/admin/adduser', this.formAddUser.value)
       .subscribe(
-        () => {},
+        (result) => {
+          Swal.fire({
+            icon: 'success',
+            text: 'Add new user success',
+          });
+          this.getUsers();
+          this.hideModal();
+          this.formAddUser.reset();
+        },
         (error) => {
-          if (error.status == 200) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Add user success',
-            });
-            this.getUsers();
-            this.hideModal();
-            this.formAddUser.reset();
-          } else {
-            Swal.fire({
-              icon: 'error',
-              text: 'Sorry, add user error',
-            });
-          }
+          Swal.fire({
+            icon: 'error',
+            text: "Can't add new user",
+          });
         }
       );
   }
@@ -207,28 +205,30 @@ export class AccountsComponent implements OnInit {
     let formData = new FormData();
     Object.entries(this.formEditUser.value).forEach(([key, value]: any[]) => {
       formData.set(key, value);
-    })
+    });
     if (file[0]) {
       formData.append('img', file[0]);
     }
-    this.http.put<any>('http://localhost:3000/admin/editUser', formData).subscribe(
-      () => {},
-      (error) => {
-        if (error.status == 200) {
-          Swal.fire({
-            icon: 'success',
-            text: 'Update user success',
-          });
-          this.getUsers();
-          this.hideModal();
-        } else {
-          Swal.fire({
-            icon: 'error',
-            text: 'Sorry, Update user error',
-          });
+    this.http
+      .put<any>('http://localhost:3000/admin/editUser', formData)
+      .subscribe(
+        () => {},
+        (error) => {
+          if (error.status == 200) {
+            Swal.fire({
+              icon: 'success',
+              text: 'Update user success',
+            });
+            this.getUsers();
+            this.hideModal();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              text: 'Sorry, Update user error',
+            });
+          }
         }
-      }
-    );
+      );
   }
 
   //delete one

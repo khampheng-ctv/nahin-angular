@@ -30,7 +30,7 @@ const register = (app) => {
           username: user.username,
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email,
+          status: user.status,
         },
         process.env.TOKEN_KEY,
         {
@@ -72,7 +72,7 @@ const login = (app) => {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email,
+            status: user.status,
           },
           process.env.TOKEN_KEY,
           {
