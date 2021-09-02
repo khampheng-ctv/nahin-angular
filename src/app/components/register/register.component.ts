@@ -90,19 +90,17 @@ export class RegisterComponent implements OnInit {
         (result) => {
           Swal.fire({
             icon: 'success',
-            text: 'Create account success',
+            text: 'Register account successfully',
           });
 
-          //save token
+          //save token & redirect
           localStorage.setItem('token', result.token);
-
-          //redirect
           this.router.navigate(['/']);
         },
         (error) => {
           Swal.fire({
             icon: 'error',
-            text: "Can't create user account",
+            text: "Can't register account. Please try again",
           });
         }
       );
