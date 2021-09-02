@@ -51,9 +51,7 @@ export class AccountsComponent implements OnInit {
       username: [
         '',
         [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(20),
+          Validators.required
         ],
       ],
       gender: ['', Validators.required],
@@ -82,8 +80,9 @@ export class AccountsComponent implements OnInit {
     this.activeRoute.queryParams.subscribe((params) => {
       let userID = params['userID'];
       if (params['modal'] == 'viewUser' && userID) {
+        let token = localStorage.getItem('token');
         this.http
-          .get<any>(`http://localhost:3000/admin/user/${userID}`)
+          .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
           .subscribe((data) => {
             this.viewUser = [data];
           });
@@ -93,8 +92,9 @@ export class AccountsComponent implements OnInit {
       }
       if (params['modal'] == 'editUser' && userID) {
         //form edit user
+        let token = localStorage.getItem('token');
         this.http
-          .get<any>(`http://localhost:3000/admin/user/${userID}`)
+          .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
           .subscribe((user) => {
             this.formEditUser = this.fb.group({
               _id: user._id,
@@ -167,8 +167,12 @@ export class AccountsComponent implements OnInit {
 
   //add new user
   addUser() {
+    let token = localStorage.getItem('token');
     this.http
-      .post<any>('http://localhost:3000/admin/adduser', this.formAddUser.value)
+      .post<any>('http://localhost:3000/admin/adduser/', {
+        user: this.formAddUser.value,
+        token: token,
+      })
       .subscribe(
         (result) => {
           Swal.fire({
@@ -191,8 +195,9 @@ export class AccountsComponent implements OnInit {
   //get all user
   getUsers() {
     this.accounts = [];
+    let token = localStorage.getItem('token');
     this.http
-      .get<any>('http://localhost:3000/admin/users')
+      .get<any>(`http://localhost:3000/admin/users/${token}`)
       .subscribe((data) => {
         for (let user of data) {
           this.accounts.push(user);
@@ -209,47 +214,50 @@ export class AccountsComponent implements OnInit {
     if (file[0]) {
       formData.append('img', file[0]);
     }
+    let token = localStorage.getItem('token');
     this.http
-      .put<any>('http://localhost:3000/admin/editUser', formData)
+      .put<any>('http://localhost:3000/admin/edituser', {
+        user: this.formEditUser.value,
+        token: token,
+      })
       .subscribe(
-        () => {},
+        (result) => {
+          Swal.fire({
+            icon: 'success',
+            text: 'Edit user success',
+          });
+          this.getUsers();
+          this.hideModal();
+        },
         (error) => {
-          if (error.status == 200) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Update user success',
-            });
-            this.getUsers();
-            this.hideModal();
-          } else {
-            Swal.fire({
-              icon: 'error',
-              text: 'Sorry, Update user error',
-            });
-          }
+          Swal.fire({
+            icon: 'error',
+            text: "Sorry, Can't edit user",
+          });
         }
       );
   }
 
   //delete one
   deleteUserOne(id: string) {
-    this.http.delete(`http://localhost:3000/admin/deleteUser/${id}`).subscribe(
-      () => {},
-      (error) => {
-        if (error.status == 200) {
+    let token = localStorage.getItem('token');
+    this.http
+      .delete(`http://localhost:3000/admin/deleteuser/${id}/${token}`)
+      .subscribe(
+        (result) => {
           Swal.fire({
             icon: 'success',
             text: 'Delete user success',
           });
           this.getUsers();
-        } else {
+        },
+        (error) => {
           Swal.fire({
             icon: 'error',
             text: 'Sorry, delete user error',
           });
         }
-      }
-    );
+      );
     this.hideModal();
   }
 
