@@ -14,14 +14,17 @@ export class AdminComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.post('http://localhost:3000/admin', '').subscribe(
-      (result) => {},
-      (error) => {
-        if (error.status != 200) {
+    if (localStorage && localStorage.getItem('token')) {
+      let token = localStorage.getItem('token');
+      this.http.post('http://localhost:3000/admin', token).subscribe(
+        (result) => {},
+        (error) => {
           this.router.navigate(['/login']);
         }
-      }
-    );
+      );
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   sidebarToggle() {
