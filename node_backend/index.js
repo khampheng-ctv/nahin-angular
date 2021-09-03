@@ -14,10 +14,6 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("Welcome to expressjs");
-});
-
 //admin
 const {
   adminPage,

@@ -1,8 +1,7 @@
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const UserModel = require("./../model/UserModel");
-const { singleUpload } = require("./../middleware/upload");
-const auth = require("./../middleware/auth");
+const auth = require('./../middleware/auth');
 
 //check auth in admin page
 const adminPage = (app) => {

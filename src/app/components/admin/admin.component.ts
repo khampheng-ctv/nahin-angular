@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent implements OnInit {
-  name: string = '';
+  admin: string = '';
   materialMenu: string = 'menu';
   sidebar: boolean = false;
 
@@ -19,7 +19,7 @@ export class AdminComponent implements OnInit {
       let token = { token: localStorage.getItem('token') };
       this.http.post('http://localhost:3000/admin', token).subscribe(
         (result: any) => {
-          this.name = result.firstName;
+          this.admin = result.firstName;
         },
         (error) => {
           this.router.navigate(['/login']);
