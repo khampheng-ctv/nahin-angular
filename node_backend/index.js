@@ -42,6 +42,11 @@ login(app);
 editAccount(app);
 deleteAccount(app);
 
+//test header
+app.get('/header', (req, res) => {
+  res.status(200).json(req.headers['x-access-token']);
+})
+
 //listen
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
