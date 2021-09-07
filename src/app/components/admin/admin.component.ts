@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-admin',
@@ -12,22 +13,18 @@ export class AdminComponent implements OnInit {
   materialMenu: string = 'menu';
   sidebar: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private auth: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
-    if (localStorage && localStorage.getItem('token')) {
-      let token = { token: localStorage.getItem('token') };
-      this.http.post('http://localhost:3000/admin', token).subscribe(
-        (result: any) => {
-          this.admin = result.firstName;
-        },
-        (error) => {
-          this.router.navigate(['/login']);
-        }
-      );
-    } else {
+    this.auth.get('http://localhost:3000/admin').subscribe((result: any) => {
+      this.admin = result.firstName;
+    }, error => {
       this.router.navigate(['/login']);
-    }
+    });
   }
 
   sidebarToggle() {

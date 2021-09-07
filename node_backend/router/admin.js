@@ -5,7 +5,7 @@ const auth = require('./../middleware/auth');
 
 //check auth in admin page
 const adminPage = (app) => {
-  app.post("/admin", auth, (req, res) => {
+  app.get("/admin", auth, (req, res) => {
     if (req.user.status == "admin") {
       res.status(200).json(req.user);
     } else {
@@ -27,7 +27,7 @@ const adminPage = (app) => {
     return next();
   });
 
-  app.get("/admin/***/:token", auth, (req, res, next) => {
+  app.get("/admin/***", auth, (req, res, next) => {
     if (req.user.status !== "admin")
       return res.status(401).send("Unauthentication");
 
@@ -79,7 +79,7 @@ const addUser = (app) => {
 
 //get all users
 const getUsers = (app) => {
-  app.get("/admin/users/:token", async (req, res) => {
+  app.get("/admin/users", async (req, res) => {
     const user = await UserModel.find({});
     res.json(user);
   });

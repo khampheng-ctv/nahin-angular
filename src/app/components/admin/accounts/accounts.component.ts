@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import Swal from 'sweetalert2';
 
 interface User {
@@ -42,7 +43,8 @@ export class AccountsComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private activeRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private auth: AuthenticationService
   ) {
     //form add user
     this.formAddUser = this.fb.group({
@@ -195,14 +197,11 @@ export class AccountsComponent implements OnInit {
   //get all user
   getUsers() {
     this.accounts = [];
-    let token = localStorage.getItem('token');
-    this.http
-      .get<any>(`http://localhost:3000/admin/users/${token}`)
-      .subscribe((data) => {
-        for (let user of data) {
-          this.accounts.push(user);
-        }
-      });
+    this.auth.get('http://localhost:3000/admin/users').subscribe((data: any) => {
+      for (let user of data) {
+        this.accounts.push(user);
+      }
+    })
   }
 
   //submit edit user

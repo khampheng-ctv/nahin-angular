@@ -11,9 +11,9 @@ export class HomeComponent implements OnInit {
   constructor(private auth: AuthenticationService) { }
 
   ngOnInit(): void {
-    this.auth.get('http://localhost:3000/header').subscribe(result => {
-      console.log(result);
-    })
+    // this.auth.get('http://localhost:3000/header').subscribe(result => {
+    //   console.log(result);
+    // })
   }
 
 }
