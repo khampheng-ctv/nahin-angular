@@ -82,12 +82,15 @@ export class AccountsComponent implements OnInit {
     this.activeRoute.queryParams.subscribe((params) => {
       let userID = params['userID'];
       if (params['modal'] == 'viewUser' && userID) {
-        let token = localStorage.getItem('token');
-        this.http
-          .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
-          .subscribe((data) => {
-            this.viewUser = [data];
-          });
+        // let token = localStorage.getItem('token');
+        // this.http
+        //   .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
+        //   .subscribe((data) => {
+        //     this.viewUser = [data];
+        //   });
+        this.auth.get(`http://localhost:3000/admin/user/${userID}`).subscribe((user: any) => {
+          this.viewUser = [user];
+        })
       }
       if (params['modal'] == 'addUser') {
         this.modalAdd = true;

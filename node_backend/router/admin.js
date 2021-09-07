@@ -87,7 +87,7 @@ const getUsers = (app) => {
 
 //get one user
 const getUser = (app) => {
-  app.get("/admin/user/:id/:token", async (req, res) => {
+  app.get("/admin/user/:id", async (req, res) => {
     const user = await UserModel.findById(req.params.id);
     res.json(user);
   });
