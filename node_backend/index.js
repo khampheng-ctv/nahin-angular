@@ -32,15 +32,19 @@ deleteUser(app); //delete user
 
 //user
 const {
+  userPage,
   register,
   login,
   editAccount,
   deleteAccount,
+  getImage
 } = require("./router/user");
+userPage(app);
 register(app);
 login(app);
 editAccount(app);
 deleteAccount(app);
+getImage(app);
 
 //test header
 app.get('/header', (req, res) => {

@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Dashboard</h1>
+  <h1 class="h2">Accounts</h1>
   <div class="btn-toolbar mb-2 mb-md-0">
     <div class="btn-group me-2">
       <a routerLink="/admin/accounts" [queryParams]="{modal: 'addUser'}"><button type="button" class="btn btn-sm btn-outline-secondary"><span class="material-icons">add_circle</span> Add user</button></a>
@@ -48,7 +48,7 @@
 <div class="modal" tabindex="-1" *ngIf="modalAdd">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form [formGroup]="formAddUser" (submit)="addUser()" novalidate>
+      <form [formGroup]="formAddUser" (submit)="addUser(file_upload_add.files)" novalidate>
         <div class="modal-header">
           <h5 class="modal-title"><span class="material-icons">add_circle</span> Add user</h5>
           <button type="button" class="btn-close" (click)="hideModal()"></button>
@@ -56,7 +56,7 @@
         <div class="modal-body">
           <div class="card-img">
             <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event)" #file_upload_add>
-            <img *ngIf="imageURL == ''" src="assets/man.png" alt="" class="img">
+            <img *ngIf="!imageURL" src="assets/man.png" alt="" class="img">
             <img *ngIf="imageURL" [src]="imageURL" alt="" class="img">
             <div class="file-upload text-center" (click)="file_upload_add.click()">
               <span class="material-icons" style="font-size:50px;">file_upload</span>
@@ -185,8 +185,7 @@
         <div class="modal-body">
           <div class="card-img">
             <input type="file" class="form-control d-none" (change)="onChangeFileUpload($event)" #file_upload_edit>
-            <img *ngIf="!formEditUser.value.img" src="assets/man.png" alt="" class="img">
-            <img *ngIf="formEditUser.value.img && imageURL == ''" [src]="formEditUser.value.img" alt="" class="img">
+            <img *ngIf="!imageURL" src="assets/man.png" alt="" class="img">
             <img *ngIf="imageURL" [src]="imageURL" alt="" class="img">
             <div class="file-upload text-center" (click)="file_upload_edit.click()">
               <span class="material-icons" style="font-size:50px;">file_upload</span>
@@ -226,7 +225,7 @@
             </div>
             <div class="mb-2 col-sm-6">
               <label class="form-label">Password:</label>
-              <input type="password" class="form-control" placeholder="Null = No update" formControlName="password" [ngClass]="{'is-invalid': formEditUser.controls.password.errors}">
+              <input type="password" class="form-control" placeholder="No update" formControlName="password" [ngClass]="{'is-invalid': formEditUser.controls.password.errors}">
               <div class="invalid-feedback" *ngIf="formEditUser.controls.password.errors">
                 <span *ngIf="formEditUser.controls.password.errors.minlength">Min length: 6 characters</span>
                 <span *ngIf="formEditUser.controls.password.errors.maxlength">Max length: 20 characters</span>

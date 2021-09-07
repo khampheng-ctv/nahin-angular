@@ -1,49 +1,54 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light user-select-none" style="height: 56px;">
-    <div class="container-fluid p-0">
-      <a class="navbar-brand ms-2" routerLink="/"><img class="img" src="assets/nahin.png" alt=""></a>
-      <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse bg-light p-2 p-md-0" id="navbarTogglerDemo03">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
-        <form class="d-flex mb-2 mb-md-0 me-md-3">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-        
-        <div class="d-flex align-items-center">
-            <button class="btn text-primary p-0 text-nowrap" routerLink="/login">Sign in</button>
-            <div class="dropdown">
-              <button id="dropdownBtnEnvelope" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i></button>
-              <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnEnvelope">
-                <li class="dropdown-item text-danger">No envelope</li>
-              </ul>
-            </div>
-            <div class="dropdown">
-              <button id="dropdownBtnNoti" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell"></i></button>
-              <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnNoti">
-                <li class="dropdown-item text-danger">No notification</li>
-              </ul>
-            </div>
-            <div class="dropdown">
-              <button id="dropdownBtnUser" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><img class="img-icon" src="assets/profile.png" alt=""></button>
-              <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnUser">
-                <li class="dropdown-item"><i class="fa fa-user-circle"></i> Your profile</li>
-                <li class="dropdown-item"><i class="fa fa-cog"></i> Settings</li>
-                <li class="dropdown-item"><i class="fa fa-sign-out-alt"></i> Sign out</li>
-              </ul>
-            </div>
+  <div class="container-fluid p-0">
+    <a class="navbar-brand ms-2" routerLink="/"><img class="img" src="assets/nahin.png" alt=""></a>
+    <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse bg-light p-2 p-md-0" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex mb-2 mb-md-0 me-md-3">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+
+      <div class="d-flex align-items-center">
+        <div class="dropdown">
+          <button id="dropdownBtnEnvelope" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i></button>
+          <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnEnvelope">
+            <li class="dropdown-item text-danger">No envelope</li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button id="dropdownBtnNoti" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell"></i></button>
+          <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnNoti">
+            <li class="dropdown-item text-danger">No notification</li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button id="dropdownBtnUser" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><img class="img-icon" src="assets/profile.png" alt=""></button>
+          <ul class="dropdown-menu dropdown-control" aria-labelledby="dropdownBtnUser">
+            <li class="dropdown-item" *ngIf="!userLogin" routerLink="/login"><span class="material-icons">login</span> Login</li>
+            <ng-container *ngIf="userLogin">
+              <li class="dropdown-item"><span class="material-icons">account_circle</span> {{userLogin}}</li>
+              <li class="dropdown-item"><span class="material-icons">settings</span> Settings</li>
+              <li class="dropdown-item" routerLink="/admin/dashboard"><span class="material-icons">dashboard</span> Dashboard</li>
+              <li class="dropdown-item" routerLink="/admin/accounts"><span class="material-icons">manage_accounts</span> Accounts</li>
+              <li class="dropdown-item"><span class="material-icons">report</span> Reports</li>
+              <li class="dropdown-item" (click)="logout()"><span class="material-icons">logout</span> Logout</li>
+            </ng-container>
+          </ul>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>

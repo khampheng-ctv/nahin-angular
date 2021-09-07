@@ -1,16 +1,22 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GetImageService {
+  headers = {
+    headers: new HttpHeaders().set(
+      'x-access-token',
+      String(localStorage.getItem('token'))
+    ),
+  };
 
   constructor(private http: HttpClient) { }
 
-  file(file: string) {
-    this.http.get(`http://localhost:3000/getImage/${file}`).subscribe(data => {
-      console.log(data);
-    })
+  getImage(url: string) {
+    this.http.get(url, this.headers).subscribe(result => {
+      return result;
+    });
   }
 }

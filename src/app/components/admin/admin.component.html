@@ -1,10 +1,10 @@
 <ng-container *ngIf="admin">
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" [routerLink]="'/'">NAHiN</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" [routerLink]="'/'"><img src="assets/nahin.png" alt="" style="width: 100px;"></a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <button class="btn text-secondary" (click)="sidebarToggle()"><span class="material-icons">{{materialMenu}}</span></button>
+        <button class="btn text-secondary d-none d-md-block" (click)="sidebarToggle()"><span class="material-icons">{{materialMenu}}</span></button>
         <input class="form-control form-control-dark w-100 d-none d-md-block" type="search" placeholder="Search" aria-label="Search">
         <div class="navbar-nav d-none d-md-block">
             <div class="nav-item text-nowrap">
@@ -17,7 +17,12 @@
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3">
-                    <span>{{admin}}</span>
+                    <!-- profile -->
+                    <div class="profile d-flex align-items-center px-2 mb-2">
+                        <img class="img me-2" src="assets/man.png" alt="">
+                        <span style="font-weight: 500;">{{admin}}</span>
+                    </div>
+                    
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" routerLink="dashboard" routerLinkActive="active">

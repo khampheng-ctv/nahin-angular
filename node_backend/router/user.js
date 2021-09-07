@@ -1,7 +1,17 @@
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require("bcrypt");
 const UserModel = require("./../model/UserModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "./../config/.env" });
+const auth = require('./../middleware/auth');
+
+//user page
+const userPage = (app) => {
+  app.get('/user', auth, (req, res) => {
+    res.status(200).json(req.user);
+  })
+}
 
 //register
 const register = (app) => {
@@ -102,11 +112,28 @@ const editAccount = (app) => {
   });
 };
 
+//get user
+const myAccount = (app) => {
+  app.get("/user/myaccount/:id", async (req, res) => {
+    const user = await UserModel.findById(req.params.id);
+    res.json(user);
+  });
+};
+
 //delete
 const deleteAccount = (app) => {
-  app.delete("/deleteAccount/:id", (req, res) => {
+  app.delete("/user/delete_account/:id", (req, res) => {
     //
   });
 };
 
-module.exports = { register, login, editAccount, deleteAccount };
+//get file/image
+const getImage = (app) => {
+  app.get('/user/get_image/:filename', async (req, res) => {
+    const filename = req.params.filename;
+    const content = await fs.readFileSync(`./images/profile/${filename}`, 'base64');
+    res.json(content);
+  })
+}
+
+module.exports = { userPage, register, login, editAccount, deleteAccount, getImage };

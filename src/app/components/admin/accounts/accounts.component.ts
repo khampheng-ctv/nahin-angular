@@ -9,6 +9,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GetImageService } from 'src/app/services/get-image.service';
 import Swal from 'sweetalert2';
 
 interface User {
@@ -44,18 +45,15 @@ export class AccountsComponent implements OnInit {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    public getImage: GetImageService
   ) {
+
     //form add user
     this.formAddUser = this.fb.group({
       firstName: ['', [Validators.required, Validators.maxLength(40)]],
       lastName: ['', [Validators.required, Validators.maxLength(40)]],
-      username: [
-        '',
-        [
-          Validators.required
-        ],
-      ],
+      username: ['', [Validators.required]],
       gender: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -74,7 +72,6 @@ export class AccountsComponent implements OnInit {
           Validators.maxLength(15),
         ],
       ],
-      img: '',
       status: ['user', Validators.required],
     });
 
@@ -82,25 +79,21 @@ export class AccountsComponent implements OnInit {
     this.activeRoute.queryParams.subscribe((params) => {
       let userID = params['userID'];
       if (params['modal'] == 'viewUser' && userID) {
-        // let token = localStorage.getItem('token');
-        // this.http
-        //   .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
-        //   .subscribe((data) => {
-        //     this.viewUser = [data];
-        //   });
-        this.auth.get(`http://localhost:3000/admin/user/${userID}`).subscribe((user: any) => {
-          this.viewUser = [user];
-        })
+        this.auth
+          .get(`http://localhost:3000/admin/user/${userID}`)
+          .subscribe((user: any) => {
+            this.viewUser = [user];
+          });
       }
       if (params['modal'] == 'addUser') {
         this.modalAdd = true;
       }
       if (params['modal'] == 'editUser' && userID) {
+
         //form edit user
-        let token = localStorage.getItem('token');
-        this.http
-          .get<any>(`http://localhost:3000/admin/user/${userID}/${token}`)
-          .subscribe((user) => {
+        this.auth
+          .get(`http://localhost:3000/admin/user/${userID}`)
+          .subscribe((user: any) => {
             this.formEditUser = this.fb.group({
               _id: user._id,
               firstName: [
@@ -111,14 +104,7 @@ export class AccountsComponent implements OnInit {
                 user.lastName,
                 [Validators.required, Validators.maxLength(40)],
               ],
-              username: [
-                user.username,
-                [
-                  Validators.required,
-                  Validators.minLength(8),
-                  Validators.maxLength(20),
-                ],
-              ],
+              username: [user.username, Validators.required],
               gender: [user.gender, Validators.required],
               email: [user.email, [Validators.required, Validators.email]],
               password: [
@@ -171,13 +157,17 @@ export class AccountsComponent implements OnInit {
   }
 
   //add new user
-  addUser() {
-    let token = localStorage.getItem('token');
-    this.http
-      .post<any>('http://localhost:3000/admin/adduser/', {
-        user: this.formAddUser.value,
-        token: token,
-      })
+  addUser(file: any) {
+    const formData = new FormData();
+    Object.entries(this.formAddUser.value).forEach(([key, value]: any[]) => {
+      formData.set(key, value);
+    });
+    if (file[0]) {
+      formData.append('profile', file[0]);
+    }
+
+    this.auth
+      .post('http://localhost:3000/admin/adduser', formData)
       .subscribe(
         (result) => {
           Swal.fire({
@@ -200,66 +190,60 @@ export class AccountsComponent implements OnInit {
   //get all user
   getUsers() {
     this.accounts = [];
-    this.auth.get('http://localhost:3000/admin/users').subscribe((data: any) => {
-      for (let user of data) {
-        this.accounts.push(user);
-      }
-    })
+    this.auth
+      .get('http://localhost:3000/admin/users')
+      .subscribe((data: any) => {
+        for (let user of data) {
+          this.accounts.push(user);
+        }
+      });
   }
 
   //submit edit user
   submitEditUser(file: any) {
-    let formData = new FormData();
+    const formData = new FormData();
     Object.entries(this.formEditUser.value).forEach(([key, value]: any[]) => {
       formData.set(key, value);
     });
     if (file[0]) {
-      formData.append('img', file[0]);
+      formData.append('profile', file[0]);
     }
-    let token = localStorage.getItem('token');
-    this.http
-      .put<any>('http://localhost:3000/admin/edituser', {
-        user: this.formEditUser.value,
-        token: token,
-      })
-      .subscribe(
-        (result) => {
-          Swal.fire({
-            icon: 'success',
-            text: 'Edit user success',
-          });
-          this.getUsers();
-          this.hideModal();
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            text: "Sorry, Can't edit user",
-          });
-        }
-      );
+
+    this.auth.put('http://localhost:3000/admin/edituser', formData).subscribe(
+      (result) => {
+        Swal.fire({
+          icon: 'success',
+          text: 'Edit user success',
+        });
+        this.getUsers();
+        this.hideModal();
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          text: "Sorry, Can't edit user",
+        });
+      }
+    );
   }
 
   //delete one
   deleteUserOne(id: string) {
-    let token = localStorage.getItem('token');
-    this.http
-      .delete(`http://localhost:3000/admin/deleteuser/${id}/${token}`)
-      .subscribe(
-        (result) => {
-          Swal.fire({
-            icon: 'success',
-            text: 'Delete user success',
-          });
-          this.getUsers();
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            text: 'Sorry, delete user error',
-          });
-        }
-      );
+    this.auth.delete(`http://localhost:3000/admin/deleteuser/${id}`).subscribe(
+      (result) => {
+        Swal.fire({
+          icon: 'success',
+          text: 'Delete user success',
+        });
+        this.getUsers();
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          text: 'Sorry, delete user error',
+        });
+      }
+    );
     this.hideModal();
   }
 
@@ -277,15 +261,6 @@ export class AccountsComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.imageURL = String(reader.result);
-        // if (str == 'add') {
-        //   this.formAddUser.patchValue({
-        //     img: reader.result,
-        //   });
-        // } else {
-        //   this.formEditUser.patchValue({
-        //     img: reader.result,
-        //   });
-        // }
       };
       reader.readAsDataURL(file);
     }
