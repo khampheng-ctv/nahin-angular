@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,14 +12,14 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    private auth: AuthenticationService
+  ) {
     this.form = this.fb.group({
-      username: [
-        '',
-        [
-          Validators.required
-        ],
-      ],
+      username: ['', [Validators.required]],
       password: [
         '',
         [
@@ -39,11 +40,11 @@ export class LoginComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             text: 'Login success. Please click OK',
+          }).then(() => {
+            localStorage.setItem('token', result.token);
+            //redirect
+            window.location.reload();
           });
-          localStorage.setItem('token', result.token);
-
-          //redirect
-          this.router.navigate(['/']);
         },
         (error) => {
           Swal.fire({
@@ -54,5 +55,13 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.auth.get('http://localhost:3000/user').subscribe((user: any) => {
+      if (user.status == 'admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 }

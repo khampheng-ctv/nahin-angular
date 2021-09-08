@@ -11,6 +11,22 @@ const userPage = (app) => {
   app.get('/user', auth, (req, res) => {
     res.status(200).json(req.user);
   })
+
+  app.get('/user/***', auth, (req, res, next) => {
+    return next();
+  })
+
+  app.post('/user/***', auth, (req, res, next) => {
+    return next();
+  })
+
+  app.put('/user/***', auth, (req, res, next) => {
+    return next();
+  })
+
+  app.delete('/user/***', auth, (req, res, next) => {
+    return next();
+  })
 }
 
 //register
@@ -97,24 +113,14 @@ const login = (app) => {
 
 //update
 const editAccount = (app) => {
-  app.put("/editAccount", async (req, res) => {
-    const { _id, username, firstName, lastName, gender, email, tel, password } =
-      req.body;
-    let data = {
-      username,
-      firstName,
-      lastName,
-      gender,
-      email,
-      tel,
-    };
-    if (password) data.password = await bcrypt.hashSync(password, 5);
+  app.put("/user/edit_account", async (req, res) => {
+    //
   });
 };
 
 //get user
 const myAccount = (app) => {
-  app.get("/user/myaccount/:id", async (req, res) => {
+  app.get("/user/my_account/:id", async (req, res) => {
     const user = await UserModel.findById(req.params.id);
     res.json(user);
   });

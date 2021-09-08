@@ -39,6 +39,6 @@ export class AdminComponent implements OnInit {
   //logout
   logout() {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    window.location.reload();
   }
 }

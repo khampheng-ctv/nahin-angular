@@ -41,9 +41,11 @@
             <ng-container *ngIf="userLogin">
               <li class="dropdown-item"><span class="material-icons">account_circle</span> {{userLogin}}</li>
               <li class="dropdown-item"><span class="material-icons">settings</span> Settings</li>
-              <li class="dropdown-item" routerLink="/admin/dashboard"><span class="material-icons">dashboard</span> Dashboard</li>
-              <li class="dropdown-item" routerLink="/admin/accounts"><span class="material-icons">manage_accounts</span> Accounts</li>
-              <li class="dropdown-item"><span class="material-icons">report</span> Reports</li>
+              <ng-container *ngIf="status=='admin'">
+                <li class="dropdown-item" routerLink="/admin/dashboard"><span class="material-icons">dashboard</span> Dashboard</li>
+                <li class="dropdown-item" routerLink="/admin/accounts"><span class="material-icons">manage_accounts</span> Accounts</li>
+                <li class="dropdown-item"><span class="material-icons">report</span> Reports</li>
+              </ng-container>
               <li class="dropdown-item" (click)="logout()"><span class="material-icons">logout</span> Logout</li>
             </ng-container>
           </ul>
